@@ -9,8 +9,13 @@
   text-transform: uppercase;
   text-decoration: underline;
 }
-.main>button{
+.main>.buttons{
   margin-top: 20px;
+}
+
+.main>.buttons>button{
+  margin-left: 10px;
+  width:100px;
 }
 .conditions>.condition{
   display: flex;
