@@ -1,89 +1,182 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
 
 export default function Home() {
 
-  const [listFields, setListFields] = useState([
-    {
-      name: 'email',
-      operations: ['like', 'is equal to']
-    },
-    {
-      name: 'grade',
-      operations: ['is equal to'],
-      propositions: ['lieutenant', 'sous-lieutenant', 'colonel major', 'commandant', 'capitaine']
-    },
-    {
-      name: 'formation',
-      operations: ['is equal to'],
-      propositions: ['Cours d’application', 'Cours de capitaine', 'Cours d’état major', 'Ecole de guerre']
-    },
-    {
-      name: 'anciennete',
-      operations: ['is equal to', 'more then', 'less then']
-    },
-    {
-      name: 'age',
-      operations: ['is equal to', 'more then', 'less then'],
-    },
-    {
-      name: 'diplome',
-      operations: ['is equal to'],
-      propositions: ['Ingénieur Informatique', 'Ingénieur Mécanique', 'Ingénieur civile', 'Ingénieur électrique']
-    },
-  ])
+  const [listFields, setListFields] = useState([])
+  const [fetchedUsers, setFetchedUsers] = useState([])
 
-  const [listSelectedFields, setlistSelectedFields] = useState([]);
-  return (
+  const getData = async () => {
+    let { data: diplomes } = await axios.get('http://localhost:8081/diplomes');
+    let { data: formations } = await axios.get('http://localhost:8081/formations');
+    let { data: grades } = await axios.get('http://localhost:8081/grades');
+
+    diplomes = diplomes.map(diplome => diplome.name)
+    formations = formations.map(formation => formation.name)
+    grades = grades.map(grade => grade.name)
+
+    setListFields({
+      email: {
+        name: 'email',
+        operations: ['like'],
+        isTaken: false
+      },
+      anciennete: {
+        name: 'anciennete',
+        operations: ['is equal to', 'more then', 'less then'],
+        isTaken: false
+      },
+      age: {
+        name: 'age',
+        operations: ['is equal to', 'more then', 'less then'],
+        isTaken: false
+      },
+      diplome: {
+        name: 'diplome',
+        operations: ['is equal to'],
+        propositions: diplomes,
+        isTaken: false
+      },
+      formation: {
+        name: 'formation',
+        operations: ['is equal to'],
+        propositions: formations,
+        isTaken: false
+      },
+      grade: {
+        name: 'grade',
+        operations: ['is equal to'],
+        propositions: grades,
+        isTaken: false
+      },
+    })
+  }
+
+  const fetchUser = async () => {
+    const bodyFilter = {}
+    for (const ele of Object.keys(listFields)) {
+      if (listFields[ele].isTaken) {
+        bodyFilter[ele] = {
+          operation: document.getElementById("operation" + listFields[ele].name).value,
+          value: document.getElementById("value" + listFields[ele].name).value
+        }
+      }
+    }
+    const { data: listUser } = await axios.post('http://localhost:8081/users/filter', bodyFilter);
+    setFetchedUsers(listUser);
+  }
+
+  useEffect(() => {
+    if (listFields.length == 0) getData();
+    fetchUser();
+  }, []);
+
+  return listFields.length == 0 ? <>Loading</> : (
     <div className={styles.container}>
       <Head>
         <title>Generateur de requete</title>
-        <meta name="description" content="Generateur de requete sql" />
+        <meta name="description" content="Advanced Filter using React/SpringBoot" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <p className={styles.title}>Generateur de requete</p>
+        <p className={styles.title}>Generateur de requête</p>
         <div className={styles.conditions}>
-          {listSelectedFields.map((ele, index) => (<div key={index} className={styles.condition}>
-            <p className={styles.title}>{index == 0 ? 'WHERE' : 'AND'}</p>
-            <select onChange={(e) => {
-              const value = e.target.value;
-              const newTmp = listFields.filter(spele => spele.name === value)
-              setlistSelectedFields([...newTmp, ...listSelectedFields.filter(spele => spele.name != ele.name)])
-              setListFields([ele, ...listFields.filter(field => field.name != value)])
-            }}>
-              <option value={ele.name} hidden={true}>{ele.name}</option>
-              {listFields.map((s_ele, index) => <option key={index} value={s_ele.name}>{s_ele.name}</option>)}
-            </select>
-            <select>
-              {ele.operations.map((sp_ele, index) => (<option key={index} value={sp_ele}>{sp_ele}</option>))}
-            </select>
-            {
-              ele.propositions ? <select>
-                {ele.propositions.map((sp_ele, index) => (<option key={index} value={sp_ele}>{sp_ele}</option>))}
-              </select> : <input type="text" placeholder="value" />
+          {Object.keys(listFields).map((ele, index) => {
+            if (listFields[ele].isTaken) {
+              return <div key={index} className={styles.condition}>
+                <select onChange={(e) => {
+                  let value = e.target.value;
+                  let data = listFields;
+                  data[ele].isTaken = false;
+                  data[value].isTaken = true;
+                  setListFields({
+                    ...data
+                  })
+                }}>
+                  <option value={listFields[ele].name} hidden={true} selected>{listFields[ele].name}</option>
+                  {Object.keys(listFields).map((s_ele, jndex) => !listFields[s_ele].isTaken ? <option key={jndex} value={listFields[s_ele].name}>{listFields[s_ele].name}</option> : <></>)}
+                </select>
+                <select id={"operation" + listFields[ele].name}>
+                  {listFields[ele].operations.map((sp_ele, pndex) => (<option key={pndex} value={sp_ele}>{sp_ele}</option>))}
+                </select>
+                {
+                  listFields[ele].propositions ?
+                    <select id={"value" + listFields[ele].name}>
+                      {listFields[ele].propositions.map((sp_ele, pndex) => (<option key={pndex} value={sp_ele}>{sp_ele}</option>))}
+                    </select> :
+                    <input id={"value" + listFields[ele].name} type="text" placeholder="value" />
+                }
+                <p className={styles.removeClause} onClick={() => {
+                  let data = listFields;
+                  data[ele].isTaken = false;
+                  setListFields({
+                    ...data
+                  });
+                }}>x</p>
+              </div>
             }
-            <p className={styles.removeClause} onClick={() => {
-              setlistSelectedFields([...listSelectedFields.filter(spele => spele.name != ele.name)])
-              setListFields([ele, ...listFields])
-            }}>x</p>
-          </div>))}
+          })}
         </div>
         <div className={styles.buttons}>
-          {listFields.length != 0 ? <button onClick={() => {
-            const tmp = listFields[0];
-            setlistSelectedFields([...listSelectedFields, tmp])
-            setListFields([...listFields.filter(sp_ele => sp_ele.name != tmp.name)]);
+          {true ? <button onClick={() => {
+            let data = {};
+            let isFounded = false;
+            for (const ele of Object.keys(listFields)) {
+              if (isFounded == false && listFields[ele].isTaken == false) {
+                data[ele] = {
+                  ...listFields[ele],
+                  isTaken: true
+                }
+                isFounded = true
+              }
+              else data[ele] = listFields[ele];
+            }
+            setListFields({ ...data });
           }}>Add clause</button> : ''}
-          <button onClick={() => {
-
-          }}>Filter</button>
+          <button onClick={fetchUser}>Filter</button>
         </div>
 
+        <table>
+          <thead>
+            <tr>
+              <th>Nom : </th>
+              <th>Prenom : </th>
+              <th>Email : </th>
+              <th>Grade : </th>
+              <th>Date de naissance : </th>
+              <th>Anciennete : </th>
+              <th>Formations : </th>
+              <th>Diplomes : </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {fetchedUsers.map((user, index) => (
+              <tr key={index}>
+                <td>{user.lastName}</td>
+                <td>{user.firstName}</td>
+                <td>{user.email}</td>
+                <td>{user.grade.name}</td>
+                <td>{moment(user.dateNaissance).format('DD/MM/YYYY')}</td>
+                <td>{user.anciennete}</td>
+                <td>
+                  <ul>
+                    {user.formations.map((formation, jndex) => (<li key={jndex}>{formation.name}</li>))}
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    {user.diplomes.map((diplome, pndex) => (<li key={pndex}>{diplome.name}</li>))}
+                  </ul>
+                </td>
+              </tr>))}
+          </tbody>
+        </table>
       </main>
     </div>
   )
