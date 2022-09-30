@@ -25,6 +25,7 @@ public class UserSpecification implements Specification<User> {
 
         if (filter.getEmail() != null) p.getExpressions().add(cb.like(root.get("email"), "%"+filter.getEmail().getValue()+"%"));
         if (filter.getGrade() != null) p.getExpressions().add(cb.and(cb.equal(root.get("grade").get("name"), filter.getGrade().getValue())));
+        if (filter.getFonction() != null) p.getExpressions().add(cb.and(cb.equal(root.get("fonction").get("name"), filter.getFonction().getValue())));
         if (filter.getAnciennete() != null) {
             if(filter.getAnciennete().getOperation().equals("is equal to")) p.getExpressions().add(cb.and(cb.equal(root.get("anciennete"), filter.getAnciennete().getValue())));
             else if(filter.getAnciennete().getOperation().equals("more then")) p.getExpressions().add(cb.and(cb.greaterThanOrEqualTo (root.get("anciennete"), filter.getAnciennete().getValue())));

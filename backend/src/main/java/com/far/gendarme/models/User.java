@@ -23,15 +23,13 @@ public class User {
 
     @Column(unique = true)
     private String email;
-    private String password;
     private Date dateNaissance;
     private int anciennete;
 
-    public User(String firstName,String lastName,String email, String password, Date dateNaissance,int anciennete) {
+    public User(String firstName,String lastName,String email, Date dateNaissance,int anciennete) {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setEmail(email);
-        this.setPassword(password);
         this.setDateNaissance(dateNaissance);
         this.setAnciennete(anciennete);
     }
@@ -55,4 +53,8 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="grade_id")
     Grade grade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fonction_id")
+    Fonction fonction;
 }

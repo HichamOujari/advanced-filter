@@ -14,4 +14,5 @@ public class FilterRequest {
     private SignleFilter anciennete;
     private SignleFilter age;
     private SignleFilter diplome;
+    private SignleFilter fonction;
 }

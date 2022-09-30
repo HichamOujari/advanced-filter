@@ -1,6 +1,7 @@
 package com.far.gendarme.responses;
 
 import com.far.gendarme.models.Diplome;
+import com.far.gendarme.models.Fonction;
 import com.far.gendarme.models.Formation;
 import com.far.gendarme.models.Grade;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class UserResponse {
     private Date dateNaissance;
     private int anciennete;
     private Grade grade;
+    private Fonction fonction;
     private List<Diplome> diplomes = new ArrayList<>();
     private List<Formation> formations = new ArrayList<>();
 }

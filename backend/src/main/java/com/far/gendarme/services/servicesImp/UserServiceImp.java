@@ -1,6 +1,7 @@
 package com.far.gendarme.services.servicesImp;
 
 import com.far.gendarme.Specifications.UserSpecification;
+import com.far.gendarme.models.Fonction;
 import com.far.gendarme.models.Grade;
 import com.far.gendarme.models.User;
 import com.far.gendarme.repositories.DiplomeRepository;
@@ -25,13 +26,6 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    GradeRepository gradeRepository;
-    @Autowired
-    FormationRepository formationRepository;
-    @Autowired
-    DiplomeRepository diplomeRepository;
-
 
     @Override
     public List<User> getUserAndFilter(FilterRequest filterRequest) {
@@ -41,8 +35,7 @@ public class UserServiceImp implements UserService {
             User user = new User();
             BeanUtils.copyProperties(ele,user);
             user.setGrade(new Grade(ele.getGrade().getId(),ele.getGrade().getName()));
-            //user.getDiplomes().addAll(ele.getDiplomes().stream().toList());
-            //user.getFormations().addAll(ele.getFormations().stream().toList());
+            user.setFonction(new Fonction(ele.getFonction().getId(),ele.getFonction().getName()));
             listUser.add(user);
         });
 

@@ -1,10 +1,7 @@
 package com.far.gendarme;
 
 import com.far.gendarme.models.*;
-import com.far.gendarme.repositories.DiplomeRepository;
-import com.far.gendarme.repositories.FormationRepository;
-import com.far.gendarme.repositories.GradeRepository;
-import com.far.gendarme.repositories.UserRepository;
+import com.far.gendarme.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @SpringBootApplication
-public class GendarmeApplication {
+public class
+GendarmeApplication {
 
 	@Autowired
 	UserRepository userRepository;
@@ -25,6 +23,8 @@ public class GendarmeApplication {
 	FormationRepository formationRepository;
 	@Autowired
 	DiplomeRepository diplomeRepository;
+	@Autowired
+	FonctionRepository fonctionRepository;
 
 
 
@@ -64,18 +64,28 @@ public class GendarmeApplication {
 					listCreatedGrades.add(gradeRepository.save(grade));
 				});
 
+				String[] listFonction = {"F1","F2","F3"};
+				List<Fonction> listCreatedFonction= new ArrayList<>();
+
+				Arrays.stream(listFonction).forEach(ele -> {
+					Fonction fonction = new Fonction();
+					fonction.setName(ele);
+					listCreatedFonction.add(fonctionRepository.save(fonction));
+				});
+
 				SimpleDateFormat dateFormat =new SimpleDateFormat("dd/MM/yyyy");
 				List<User> listeUsers = Arrays.asList(
-						new User("Hicham","Oujari","hichamouajri99@gmail.com","pass123",dateFormat.parse("02/09/1999"),1),
-						new User("Ayoub","Hadji","ayoubhadji@gmail.com","pass123",dateFormat.parse("22/02/1979"),2),
-						new User("Elferdi","Said","SaidElferdi@gmail.com","pass123",dateFormat.parse("12/04/1995"),3),
-						new User("youssef","Kacimi","youssef@gmail.com","pass123",dateFormat.parse("13/12/1967"),4)
+						new User("Hicham","Oujari","hichamouajri99@gmail.com",dateFormat.parse("02/09/1999"),1),
+						new User("Ayoub","Hadji","ayoubhadji@gmail.com",dateFormat.parse("22/02/1979"),2),
+						new User("Elferdi","Said","SaidElferdi@gmail.com",dateFormat.parse("12/04/1995"),3),
+						new User("youssef","Kacimi","youssef@gmail.com",dateFormat.parse("13/12/1967"),4)
 				);
 				Random random = new Random();
 				listeUsers.forEach(ele ->{
 					ele.getDiplomes().add(listCreatedDiplomes.get(random.nextInt( 5)));
 					ele.getFormations().add(listCreatedFormations.get(random.nextInt(4)));
 					ele.setGrade(listCreatedGrades.get(random.nextInt(10)));
+					ele.setFonction(listCreatedFonction.get(random.nextInt(3)));
 					this.userRepository.save(ele);
 				});
 			}catch(Exception err){

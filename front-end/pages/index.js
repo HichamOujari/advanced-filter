@@ -14,12 +14,20 @@ export default function Home() {
     let { data: diplomes } = await axios.get('http://localhost:8081/diplomes');
     let { data: formations } = await axios.get('http://localhost:8081/formations');
     let { data: grades } = await axios.get('http://localhost:8081/grades');
+    let { data: fonctions } = await axios.get('http://localhost:8081/fonctions');
 
     diplomes = diplomes.map(diplome => diplome.name)
     formations = formations.map(formation => formation.name)
     grades = grades.map(grade => grade.name)
+    fonctions = fonctions.map(fonction => fonction.name)
 
     setListFields({
+      grade: {
+        name: 'grade',
+        operations: ['is equal to'],
+        propositions: grades,
+        isTaken: false
+      },
       email: {
         name: 'email',
         operations: ['like'],
@@ -47,10 +55,10 @@ export default function Home() {
         propositions: formations,
         isTaken: false
       },
-      grade: {
-        name: 'grade',
+      fonction: {
+        name: 'fonction',
         operations: ['is equal to'],
-        propositions: grades,
+        propositions: fonctions,
         isTaken: false
       },
     })
@@ -148,6 +156,7 @@ export default function Home() {
               <th>Prenom : </th>
               <th>Email : </th>
               <th>Grade : </th>
+              <th>Fonction : </th>
               <th>Date de naissance : </th>
               <th>Anciennete : </th>
               <th>Formations : </th>
@@ -162,6 +171,7 @@ export default function Home() {
                 <td>{user.firstName}</td>
                 <td>{user.email}</td>
                 <td>{user.grade.name}</td>
+                <td>{user.fonction.name}</td>
                 <td>{moment(user.dateNaissance).format('DD/MM/YYYY')}</td>
                 <td>{user.anciennete}</td>
                 <td>
