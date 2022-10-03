@@ -19,6 +19,8 @@ public class DiplomeController {
     @Autowired
     DiplomeRepository diplomeRepository;
 
+
+
     @GetMapping()
     public ResponseEntity<List<Diplome>> getAllDiplome(){
         return ResponseEntity.ok().body(this.diplomeRepository.findAll());
@@ -29,6 +31,6 @@ public class DiplomeController {
     public ResponseEntity<Diplome> createNewDiplome(@RequestBody DiplomeRequest diplomeRequest){
         Diplome diplome = new Diplome();
         diplome.setName(diplomeRequest.getName());
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(this.diplomeRepository.save(diplome));
     }
 }

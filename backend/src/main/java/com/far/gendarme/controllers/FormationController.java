@@ -1,14 +1,15 @@
 package com.far.gendarme.controllers;
 
 import com.far.gendarme.models.Formation;
+import com.far.gendarme.models.Grade;
 import com.far.gendarme.models.User;
 import com.far.gendarme.repositories.FormationRepository;
+import com.far.gendarme.requests.FormationRequest;
+import com.far.gendarme.requests.GradeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +24,12 @@ public class FormationController {
     @GetMapping()
     public ResponseEntity<List<Formation>> getAllFormation(){
         return ResponseEntity.ok().body(this.formationRepository.findAll());
+    }
+
+    @PostMapping()
+    public ResponseEntity<Formation> createNewFormation(@RequestBody FormationRequest formationRequest){
+        Formation formation = new Formation();
+        formation.setName(formationRequest.getName());
+        return ResponseEntity.ok().body(this.formationRepository.save(formation));
     }
 }
