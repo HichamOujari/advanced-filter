@@ -75,10 +75,11 @@ GendarmeApplication {
 
 				SimpleDateFormat dateFormat =new SimpleDateFormat("dd/MM/yyyy");
 				List<User> listeUsers = Arrays.asList(
-						new User("Hicham","Oujari","hichamouajri99@gmail.com",dateFormat.parse("02/09/1999"),1),
-						new User("Ayoub","Hadji","ayoubhadji@gmail.com",dateFormat.parse("22/02/1979"),2),
-						new User("Elferdi","Said","SaidElferdi@gmail.com",dateFormat.parse("12/04/1995"),3),
-						new User("youssef","Kacimi","youssef@gmail.com",dateFormat.parse("13/12/1967"),4)
+						new User("Hichsdsjhdmeee","Oujari",dateFormat.parse("02/09/1999"),1),
+						new User("mihcikls","Oujari",dateFormat.parse("02/09/1999"),1),
+						new User("Ayoub","Hadji",dateFormat.parse("22/02/1979"),2),
+						new User("Elferdi","Said",dateFormat.parse("12/04/1995"),3),
+						new User("youssef","Kacimi",dateFormat.parse("13/12/1967"),4)
 				);
 				Random random = new Random();
 				listeUsers.forEach(ele ->{

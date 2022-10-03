@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository  extends CrudRepository<User, Long>, JpaSpecificationExecutor<User> {
-    public List<User> findByEmail(String email);
 }
 
 

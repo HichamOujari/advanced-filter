@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterRequest {
-    private SignleFilter email;
     private SignleFilter grade;
     private SignleFilter formation;
     private SignleFilter anciennete;

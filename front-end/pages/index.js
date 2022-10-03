@@ -28,11 +28,6 @@ export default function Home() {
         propositions: grades,
         isTaken: false
       },
-      email: {
-        name: 'email',
-        operations: ['like'],
-        isTaken: false
-      },
       anciennete: {
         name: 'anciennete',
         operations: ['is equal to', 'more then', 'less then'],
@@ -154,7 +149,6 @@ export default function Home() {
             <tr>
               <th>Nom : </th>
               <th>Prenom : </th>
-              <th>Email : </th>
               <th>Grade : </th>
               <th>Fonction : </th>
               <th>Date de naissance : </th>
@@ -169,7 +163,6 @@ export default function Home() {
               <tr key={index}>
                 <td>{user.lastName}</td>
                 <td>{user.firstName}</td>
-                <td>{user.email}</td>
                 <td>{user.grade.name}</td>
                 <td>{user.fonction.name}</td>
                 <td>{moment(user.dateNaissance).format('DD/MM/YYYY')}</td>

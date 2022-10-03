@@ -20,16 +20,12 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
-
-    @Column(unique = true)
-    private String email;
     private Date dateNaissance;
     private int anciennete;
 
-    public User(String firstName,String lastName,String email, Date dateNaissance,int anciennete) {
+    public User(String firstName,String lastName, Date dateNaissance,int anciennete) {
         this.setFirstName(firstName);
         this.setLastName(lastName);
-        this.setEmail(email);
         this.setDateNaissance(dateNaissance);
         this.setAnciennete(anciennete);
     }

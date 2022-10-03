@@ -23,7 +23,6 @@ public class UserSpecification implements Specification<User> {
     public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb)  {
         Predicate p = cb.and();
 
-        if (filter.getEmail() != null) p.getExpressions().add(cb.like(root.get("email"), "%"+filter.getEmail().getValue()+"%"));
         if (filter.getGrade() != null) p.getExpressions().add(cb.and(cb.equal(root.get("grade").get("name"), filter.getGrade().getValue())));
         if (filter.getFonction() != null) p.getExpressions().add(cb.and(cb.equal(root.get("fonction").get("name"), filter.getFonction().getValue())));
         if (filter.getAnciennete() != null) {

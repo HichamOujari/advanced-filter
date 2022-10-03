@@ -29,5 +29,6 @@ public class DiplomeController {
     public ResponseEntity<Diplome> createNewDiplome(@RequestBody DiplomeRequest diplomeRequest){
         Diplome diplome = new Diplome();
         diplome.setName(diplomeRequest.getName());
+        return ResponseEntity.ok().body(null);
     }
 }
