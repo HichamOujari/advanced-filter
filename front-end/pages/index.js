@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Image from 'next/image'
+import xlsx from "json-as-xlsx"
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -78,6 +78,49 @@ export default function Home() {
     fetchUser();
   }, []);
 
+  const download = () => {
+    let data = [
+      {
+        sheet: "users",
+        columns: [
+          { label: "Prenom", value: "firstName" },
+          { label: "Nom", value: "lastName" },
+          { label: "Date de naissance", value: "dateNaissance" },
+          { label: "Anciennete", value: "anciennete" },
+          { label: "Grade", value: (row) => row.grade.name },
+          { label: "Fonction", value: (row) => row.fonction.name },
+          { label: "Grade", value: (row) => row.grade.name },
+          {
+            label: "formations", value: (row) => {
+              const tmp = "";
+              for (const ele of row.formations) {
+                tmp += '- ' + ele.name + '\n'
+              }
+              return tmp;
+            }
+          },
+          {
+            label: "Diplomes", value: (row) => {
+              const tmp = "";
+              for (const ele of row.diplomes) {
+                tmp += '- ' + ele.name + '\n'
+              }
+              return tmp;
+            }
+          }
+        ],
+        content: fetchedUsers,
+      }
+    ]
+
+    let settings = {
+      fileName: "ListUser", // Name of the resulting spreadsheet
+      extraLength: 3, // A bigger number means that columns will be wider
+    }
+
+    xlsx(data, settings)
+  }
+
   return listFields.length == 0 ? <>Loading</> : (
     <div className={styles.container}>
       <Head>
@@ -143,7 +186,9 @@ export default function Home() {
           }}>Add clause</button> : ''}
           <button onClick={fetchUser}>Filter</button>
         </div>
-
+        <div className={styles.actionbtns}>
+          <button onClick={() => download()} >Export (xlsx)</button>
+        </div>
         <table>
           <thead>
             <tr>

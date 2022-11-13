@@ -50,3 +50,14 @@
   margin-right: 10px;
   width: 100px;
 }
+
+
+.actionbtns{
+  margin-top: 20px;
+  width: 51.5%;
+}
+
+.actionbtns>button{
+  height:30px;
+  cursor: pointer;
+}
